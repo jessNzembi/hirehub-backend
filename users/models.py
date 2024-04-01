@@ -37,3 +37,10 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
+
+class Profile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    phone_number = models.CharField(max_length=15, blank=True)
+    gender = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')], blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True)
+    age = models.IntegerField(blank=True, null=True)

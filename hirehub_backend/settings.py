@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # installed apps
     'rest_framework',
+    'corsheaders',
 
     # Custom applications
     'users.apps.UsersConfig'
@@ -49,6 +50,7 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -130,4 +132,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-#1to3456abcD
+
+CORS_ORIGIN_ALLOW_ALL = True 

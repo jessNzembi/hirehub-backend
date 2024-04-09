@@ -2,7 +2,7 @@ from django.db import models
 from users.models import CustomUser
 
 class Jobs(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     job_name = models.CharField(max_length=30)
     country = models.CharField(max_length=30)
     city = models.CharField(max_length=30)

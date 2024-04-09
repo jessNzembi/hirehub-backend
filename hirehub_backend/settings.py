@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'corsheaders',
 
     # Custom applications
-    'users.apps.UsersConfig'
+    'users.apps.UsersConfig',
+    'jobs.apps.JobsConfig'
 ]
 
 

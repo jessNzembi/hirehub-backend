@@ -29,6 +29,11 @@ class CustomUser(AbstractUser):
     email = models.EmailField(verbose_name="email address", max_length=255, unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
+    position = models.CharField(max_length=30, blank=True)
+    phone_number = models.CharField(max_length=15, blank=True)
+    gender = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')], blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True)
+    age = models.IntegerField(blank=True, null=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
@@ -37,11 +42,3 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
-
-class Profile(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    position = models.CharField(max_length=30, blank=True)
-    phone_number = models.CharField(max_length=15, blank=True)
-    gender = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')], blank=True)
-    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True)
-    age = models.IntegerField(blank=True, null=True)

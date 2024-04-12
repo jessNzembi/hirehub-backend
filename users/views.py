@@ -3,15 +3,19 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
-from users.models import CustomUser, Profile
-from .serializers import CustomUserSerializer, ProfileSerializer
+from users.models import CustomUser
+from .serializers import CustomUserSerializer
 
 @api_view(['POST'])
 def signup(request):
     serializer = CustomUserSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        user = serializer.save()
+        response_data = {
+            'user_id': user.id,
+            'message': 'User created successfully',
+        }
+        return Response(response_data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
@@ -54,33 +58,15 @@ def delete_user(request, user_id):
     except CustomUser.DoesNotExist:
         return JsonResponse({'message': 'User not found'}, status=404)
 
-@api_view(['GET'])
-def profile_detail(request, user_id):
-    try:
-        profile = Profile.objects.get(user_id=user_id)
-        serializer = ProfileSerializer(profile)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    except Profile.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-@api_view(['POST'])
-def profile_create(request):
-    if request.method == 'POST':
-        serializer = ProfileSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])
 def update_profile(request, user_id):
     try:
-        profile = Profile.objects.get(user_id=user_id)
-        serializer = ProfileSerializer(profile, data=request.data)
+        profile = CustomUser.objects.get(id=user_id)
+        serializer = CustomUserSerializer(profile, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    except Profile.DoesNotExist:
+    except CustomUser.DoesNotExist:
         return Response({'message': 'Profile not found'}, status=status.HTTP_404_NOT_FOUND)

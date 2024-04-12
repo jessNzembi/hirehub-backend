@@ -65,6 +65,9 @@ def update_profile(request, user_id):
         profile = CustomUser.objects.get(id=user_id)
         serializer = CustomUserSerializer(profile, data=request.data, partial=True)
         if serializer.is_valid():
+            # Check if 'profile_picture' is in request data
+            if 'profile_picture' in request.FILES:
+                profile.profile_picture = request.FILES['profile_picture']
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -13,6 +13,15 @@ def job_details(request, user_id):
     except Jobs.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['GET'])
+def view_job(request, job_id):
+    try:
+        job = Jobs.objects.get(id=job_id)
+        serializer = JobSerializer(job)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Jobs.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(['POST'])
 def add_job(request):

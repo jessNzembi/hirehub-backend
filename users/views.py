@@ -26,7 +26,17 @@ def log_in(request):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return JsonResponse({'userId': user.id}, status=200)
+            return JsonResponse({
+                'user_id': user.id,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'position': user.position,
+                'phone_number': user.phone_number,
+                'gender': user.gender,
+                'profile_picture': user.profile_picture.url if user.profile_picture else None,
+                'age': user.age
+            })
         else:
             return JsonResponse({'message': 'Invalid credentials'}, status=400)
     else:
@@ -67,6 +77,10 @@ def update_profile(request, user_id):
         if serializer.is_valid():
             # Check if 'profile_picture' is in request data
             if 'profile_picture' in request.FILES:
+                # Delete the old profile picture if it exists
+                if profile.profile_picture:
+                    profile.profile_picture.delete()
+                # Save the new profile picture
                 profile.profile_picture = request.FILES['profile_picture']
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)

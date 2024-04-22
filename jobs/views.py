@@ -53,8 +53,9 @@ def all_jobs(request):
     except Jobs.DoesNotExist:
         return Response({'message': 'No jobs found'}, status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['DELETE'])
+@api_view(['GET', 'DELETE'])
 def delete_job(request, job_id):
+    print("Jaba...")
     try:
         job = Jobs.objects.get(id=job_id)
         job.delete()
